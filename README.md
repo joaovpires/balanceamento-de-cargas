@@ -19,8 +19,10 @@ Para testar, abra no navegador inserindo o IP público do front, substituindo o 
 Agora iremos criar um arquivo 'load-balancer.conf, pelos comandos:<br>
 `cd /etc/nginx/conf.d`<br>
 `sudo nano load-balancer.conf`<br>
+
 Após isso, cole esse template e altere os valores em 'x' para os valores reais de IP das instâncias dos seus servidores e do balanceador.
 
+```
 upstream backend {
 	server XXX.XX.XX.XX:5000; # backend1 - IP privado
 	server XXX.XX.XX.XX:5000; # backend2 - IP privado
@@ -33,4 +35,21 @@ server {
 		proxy_pass http://backend;
 	}
 }
+```
+Feito a alteração, pressione `CTRL + O` para terminar a edição, `ENTER` para confirmar e `CTRL + X` para sair, e `sudo nginx -t && sudo service nginx reload` para confirmar as mudanças.
 
+## 4 - Instalando o Apache e alterando o HTML
+
+Em cada instância webserver (backend), conectar e instalar o Apache: <br>
+```
+sudo apt update 
+sudo apt install apache2
+```
+Agora iremos alterar o html
+`sudo nano /var/www/html/index.html`
+
+Obs: Coloque um html diferente em cada webserver para notar a diferença entre eles.
+
+Ao abrir o front no browser, a cada atualização deverá apontar para um webserver diferente.
+
+## 5 - Função de conversão
