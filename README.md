@@ -8,6 +8,11 @@ Em seguida, digite `chmod 400`
 
 Para conectar a instância, utilize `ssh -i “nome-da-chave.pem” ubuntu@IPPUBLICOFRONT`
 
+Obs: Configurando o grupo de segurança: <br>
+Olhar nas suas instâncias o nome do grupo de segurança.<br>
+• Em grupo de seguranças, clicar no grupo e editar a entrada, adicionando uma nova rega permitindo todos os TCPs <br>
+• ⁠Adicionar o id desse grupo de segurança na opção origem
+
 ## 2 - Instalando o nginx na instância do front-end
 
 Use `sudo apt get update` e `sudo apt-get install nginx` para realizar a instalação, em seguida `sudo service nginx restart`
