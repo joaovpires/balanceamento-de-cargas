@@ -58,3 +58,76 @@ Obs: Coloque um html diferente em cada webserver para notar a diferença entre e
 Ao abrir o front no browser, a cada atualização deverá apontar para um webserver diferente.
 
 ## 5 - Função de conversão
+
+Para essa função, utilizamos o python flask.
+
+```
+sudo apt update
+sudo apt install python3-pip python3-dev build-essential libssl-dev libffi-dev python3-setuptools
+```
+Criar um ambiente virtual em Python:
+
+```
+sudo apt install python3-venv
+mkdir ~/myproject
+cd ~/myproject
+python3 -m venv myprojectenv
+source myprojectenv/bin/activate
+```
+
+Exemplo de função de conversão:
+
+```
+import requests
+import socket
+import flask
+from flask import jsonify
+
+app = flask.Flask(_name_)
+
+def convertemoeda(valor):
+    url = "https://economia.awesomeapi.com.br/json/last/USD-BRL,EUR-BRL"
+    response = requests.get(url)
+    data = response.json()
+    taxa_dolar = float(data['USDBRL']['bid'])
+    taxa_euro = float(data['EURBRL']['bid'])
+
+    valor_em_dolar = valor * taxa_dolar
+    valor_em_euro = valor * taxa_euro
+
+    return {
+        "conversao": {
+            "real": valor,
+            "dolar": valor_em_dolar,
+            "euro": valor_em_euro,
+            "maquina": socket.gethostname()  # Correção: Usando socket.gethostname() para obter o nome da máquina.
+        }
+    }
+
+@app.route('/', methods=['GET'])
+def home():
+    resultado = convertemoeda(5)
+    return jsonify(resultado)
+
+@app.route('/convertamoeda/<float:valor>', methods=['GET'])
+def converte_moeda(valor):
+    resultado = convertemoeda(valor)
+    return jsonify(resultado)
+
+@app.route('/convertamoeda/<float:valor>', methods=['GET'])
+def converta_moeda(valor):
+    resultado = convertemoeda(valor)
+    html = f'''
+    <html>
+    <h1>Site Michele Ramos, João Pires e Felipe Leite</h1>
+    <p>{resultado}</p>
+    </html>
+    '''
+    return html
+
+if _name_ == '_main_':
+    app.run(host='0.0.0.0', port=5000)
+```
+
+
+
